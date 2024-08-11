@@ -32,9 +32,9 @@ exports.signUpUser = async (req, res) => {
         const token = jwt.sign({ email: createdUser.email, userId: createdUser._id }, process.env.secret_key, { expiresIn: "3days" });
 
         // Send verification email 
-        const verifyLink = `https://todoapp-ci12.onrender.com/verifyUser/${token}`;
+        const verifyLink = `https://birthday1-ppfl.onrender.com/verifyUser/${token}`;
         const emailSubject = 'BIRTHDAY Mail';
-        const html = generateWelcomeEmail(createdUser.fullName, verifyLink);
+        const html = generateWelcomeEmail(verifyLink,createdUser.fullName);
 
         const mailOptions = {
             from: process.env.user,
@@ -76,9 +76,9 @@ exports.resendVerification = async (req, res) => {
         const token = jwt.sign({ email: user.email, userId: user._id }, process.env.secret_key, { expiresIn: "3d" });
 
         // Send verification email
-        const verificationLink = `https://todoapp-1-xkm1.onrender.com/verifyUser/${token}`;
+        const verificationLink = `https://birthday1-ppfl.onrender.com/verifyUser/${token}`;
         const emailSubject = 'Verification Mail';
-        const html = generateWelcomeEmail(user.fullName, verificationLink);
+        const html = generateWelcomeEmail(user.fullName, verificationLink); 
 
         const mailOptions = {
             from: process.env.user,
@@ -146,26 +146,27 @@ exports.resendVerification = async (req, res) => {
 // };
 
 //create an end point to verify users email
+
 exports.verifyUser = async (req, res) => {
     try {
         const { id, token } = req.params;
 
         // Find user by ID
-        const findUser = await userModel.findById(id);
+        const findUser = await UserModel.findById(id);
         if (!findUser) {
             return res.status(404).json({ message: 'User not found' });
         }
 
         // Verify token
-        jwt.verify(token, process.env.jwtSecret, async (err) => {
+        jwt.verify(token, process.env.secret_key, async (err) => {
             if (err) {
-                const verifyLink = `${req.protocol}://${req.get("host")}/api/v1/newemail/${findUser._id}`;
-                await sendMail({
+                const verifyLink = `https://birthday1-ppfl.onrender.com/verifyUser/${token}`;
+                await sendEmail({
                     subject: 'BIRTHDAY BLESSING!!',
                     email: findUser.email,
-                    html: html(verifyLink, findUser.fullName)
+                    html: generateWelcomeEmail(verifyLink, findUser.fullName)
                 });
-                return res.json({ message: 'This link has expired. Please check your email for a new link.' });
+                return res.status(400).json({ message: 'This link has expired. Please check your email for a new link.' });
             }
 
             if (findUser.isVerified) {
@@ -173,14 +174,14 @@ exports.verifyUser = async (req, res) => {
             }
 
             // Mark user as verified
-            await userModel.findByIdAndUpdate(id, { isVerified: true });
+            await UserModel.findByIdAndUpdate(id, { isVerified: true });
 
             // Respond with a beautiful birthday message and image slideshow
             res.status(200).send(`
                 <html>
                     <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; text-align: center; color: #333;">
                         <div style="background-color: #ffcc99; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                            <h1 style="color: #ff6600;">🎉 Happy Birthday, ${findUser.firstName}! 🎉</h1>
+                            <h1 style="color: #ff6600;">🎉 Happy Birthday, ${findUser.fullName}! 🎉</h1>
                             <p style="font-size: 18px; line-height: 1.6;">We’re so thrilled to celebrate your special day with you!</p>
                             <p style="font-size: 18px; line-height: 1.6;">May your year be filled with joy, love, and success.</p>
                             <p style="font-size: 18px; line-height: 1.6;">Thank you for being part of our community.</p>
@@ -227,9 +228,11 @@ exports.verifyUser = async (req, res) => {
         });
 
     } catch (error) {
+        console.error('Error during email verification:', error);
         res.status(500).json({ message: error.message });
     }
 };
+
 
 
 // login function
