@@ -149,83 +149,51 @@ exports.resendVerification = async (req, res) => {
 
 exports.verifyUser = async (req, res) => {
     try {
-        const { id, token } = req.params;
-
-        // Find user by ID
-        const findUser = await UserModel.findById(id);
-        if (!findUser) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        // Verify token
-        jwt.verify(token, process.env.secret_key, async (err) => {
-            if (err) {
-                const verifyLink = `https://birthday1-ppfl.onrender.com/verifyUser/${token}`;
-                await sendEmail({
-                    subject: 'BIRTHDAY BLESSING!!',
-                    email: findUser.email,
-                    html: generateWelcomeEmail(verifyLink, findUser.fullName)
-                });
-                return res.status(400).json({ message: 'This link has expired. Please check your email for a new link.' });
-            }
-
-            if (findUser.isVerified) {
-                return res.status(400).json({ message: 'Your account has already been verified.' });
-            }
-
-            // Mark user as verified
-            await UserModel.findByIdAndUpdate(id, { isVerified: true });
-
-            // Respond with a beautiful birthday message and image slideshow
-            res.status(200).send(`
-                <html>
-                    <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; text-align: center; color: #333;">
-                        <div style="background-color: #ffcc99; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-                            <h1 style="color: #ff6600;">🎉 Happy Birthday, ${findUser.fullName}! 🎉</h1>
-                            <p style="font-size: 18px; line-height: 1.6;">We’re so thrilled to celebrate your special day with you!</p>
-                            <p style="font-size: 18px; line-height: 1.6;">May your year be filled with joy, love, and success.</p>
-                            <p style="font-size: 18px; line-height: 1.6;">Thank you for being part of our community.</p>
-                            <p style="font-size: 18px; line-height: 1.6;">We’re delighted to have you with us!</p>
-                            <p style="font-size: 18px; line-height: 1.6;">Enjoy your birthday and the new journey ahead.</p>
-                            <p style="font-size: 18px; line-height: 1.6;">You deserve all the happiness in the world!</p>
-                            <p style="font-size: 16px; color: #666;">You will be redirected shortly...</p>
-                            <div id="images" style="text-align: center; margin-top: 20px;">
-                                <img src="https://example.com/path/to/your/image1.jpg" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
-                                <img src="https://example.com/path/to/your/image2.jpg" alt="Birthday Image 2" style="width: 300px; height: auto; display: none;" />
-                                <!-- Add more images as needed -->
-                            </div>
+        // Respond with a beautiful birthday message and image slideshow
+        res.status(200).send(`
+            <html>
+                <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; text-align: center; color: #333;">
+                    <div style="background-color: #ffcc99; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        <h1 style="color: #ff6600;">🎉 Happy Birthday, Ella! 🎉</h1>
+                        <p style="font-size: 18px; line-height: 1.6;">We’re so thrilled to celebrate your special day with you!</p>
+                        <p style="font-size: 18px; line-height: 1.6;">May your year be filled with joy, love, and success.</p>
+                        <p style="font-size: 18px; line-height: 1.6;">Thank you for being part of our community.</p>
+                        <p style="font-size: 18px; line-height: 1.6;">We’re delighted to have you with us!</p>
+                        <p style="font-size: 18px; line-height: 1.6;">Enjoy your birthday and the new journey ahead.</p>
+                        <p style="font-size: 18px; line-height: 1.6;">You deserve all the happiness in the world!</p>
+                        <p style="font-size: 16px; color: #666;">You will see some lovely images shortly...</p>
+                        <div id="images" style="text-align: center; margin-top: 20px;">
+                            <img src="https://example.com/path/to/your/image1.jpg" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
+                            <img src="https://example.com/path/to/your/image2.jpg" alt="Birthday Image 2" style="width: 300px; height: auto; display: none;" />
+                            <!-- Add more images as needed -->
                         </div>
-                        <script>
-                            let currentIndex = 0;
-                            const images = document.querySelectorAll('#images img');
-                            const totalImages = images.length;
+                    </div>
+                    <script>
+                        let currentIndex = 0;
+                        const images = document.querySelectorAll('#images img');
+                        const totalImages = images.length;
 
-                            function showImage(index) {
-                                images.forEach((img, i) => {
-                                    img.style.display = i === index ? 'block' : 'none';
-                                });
-                            }
+                        function showImage(index) {
+                            images.forEach((img, i) => {
+                                img.style.display = i === index ? 'block' : 'none';
+                            });
+                        }
 
-                            function startSlideshow() {
+                        function startSlideshow() {
+                            showImage(currentIndex);
+                            setInterval(() => {
+                                currentIndex = (currentIndex + 1) % totalImages;
                                 showImage(currentIndex);
-                                setInterval(() => {
-                                    currentIndex = (currentIndex + 1) % totalImages;
-                                    showImage(currentIndex);
-                                }, 3000); // Show each image for 3 seconds
-                            }
+                            }, 3000); // Show each image for 3 seconds
+                        }
 
-                            setTimeout(() => {
-                                startSlideshow();
-                            }, 10000); // Start slideshow after 10 seconds
-
-                            setTimeout(() => {
-                                window.location.href = 'http://localhost:2121';
-                            }, 25000); // Redirect after 25 seconds (10s wait + 15s slideshow)
-                        </script>
-                    </body>
-                </html>
-            `);
-        });
+                        setTimeout(() => {
+                            startSlideshow();
+                        }, 10000); // Start slideshow after 10 seconds
+                    </script>
+                </body>
+            </html>
+        `);
 
     } catch (error) {
         console.error('Error during email verification:', error);
