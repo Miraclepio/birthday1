@@ -164,7 +164,7 @@ exports.verifyUser = async (req, res) => {
                         <p style="font-size: 16px; color: #666;">You will see some lovely images shortl...</p>
                         <div id="images" style="text-align: center; margin-top: 20px;">
                             <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1722457530/xd23hsujfysmpmgkqadz.jpg" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
-                            <img src="C:\Users\MIRACLE\Downloads\ella.jpg" alt="Birthday Image 2" style="width: 300px; height: auto; display: none;" />
+                            <img src="ella.jpg" alt="Birthday Image 2" style="width: 300px; height: auto; display: none;" />
                             <!-- Add more images as needed -->
                         </div>
                     </div>
