@@ -175,7 +175,6 @@ exports.verifyUser = async (req, res) => {
                             <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724183413/iooav6y1ctuoiytwaszj.jpg" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
                             <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724183927/rvvbx9jne6xqkzjklckj.jpg" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
                             <img src="https://web.facebook.com/100090452029135/videos/1666212570472219" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
-                            <img src="ella.jpg" alt="Birthday Image 2" style="width: 300px; height: auto; display: none;" />
                             <!-- Add more images as needed -->
                         </div>
                     </div>
