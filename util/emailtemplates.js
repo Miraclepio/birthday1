@@ -78,7 +78,7 @@
                 <p>We are beyond excited to celebrate your special day with you! As a token of our appreciation, we’ve prepared a little something to get you started.</p>
                 <p>Please click the button below to verify your account and unwrap your gift:</p>
                 <p>
-                    <a href="${verifyLink}" class="button">Verify My Account</a>
+                    <a href="${verifyLink}" class="button">HAPPY BIRTHDAY <br>🎉 please click 🎉</a>
                 </p>
                 <p>If you didn’t sign up for an account, no worries—just ignore this email.</p>
                 <p>Sending you a big birthday hug and lots of love!<br>Warmest wishes,<br> The THE CURVE AFRICA Team</p>
