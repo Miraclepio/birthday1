@@ -169,17 +169,17 @@ exports.verifyUser = async (req, res) => {
                         <p style="font-size: 18px; line-height: 1.6;">You deserve all the happiness in the world!</p>
                         <p style="font-size: 16px; color: #666;">You will see some lovely images shortly...</p>
                         <div id="images" style="text-align: center; margin-top: 20px;">
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724185041/pp2gmahemghn9eysj9vw.jpg" alt="Birthday Image 1" style="width: 100%; height: 90vh; display: none;" />
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724184878/htkgm2rei1plxriyoucv.jpg" alt="Birthday Image 2" style="width: 100%; height: 90vh; display: none;" />
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1722457530/xd23hsujfysmpmgkqadz.jpg" alt="Birthday Image 3" style="width: 100%; height: 90vh; display: none;" />
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724183413/iooav6y1ctuoiytwaszj.jpg" alt="Birthday Image 4" style="width: 100%; height: 90vh; display: none;" />
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724183927/rvvbx9jne6xqkzjklckj.jpg" alt="Birthday Image 5" style="width: 100%; height: 90vh; display: none;" />
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724190531/nscznqenv9z0sxieydys.jpg" alt="Birthday Image 6" style="width: 100%; height: 90vh; display: none;" />
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724190678/ddt0pnqctkxbaixcjzkd.jpg" alt="Birthday Image 7" style="width: 100%; height: 90vh; display: none;" />
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724190730/x8yb1ewbhoffsiecqibn.jpg" alt="Birthday Image 8" style="width: 100%; height: 90vh; display: none;" />
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724190848/hl4q9kqatpu6ywjewxp4.jpg" alt="Birthday Image 9" style="width: 100%; height: 90vh; display: none;" />
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724191070/osaiagjdzizpefschmav.jpg" alt="Birthday Image 10" style="width: 100%; height: 90vh; display: none;" />
-                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724191126/q2qhi0qljeuw6erdqkjf.jpg" alt="Birthday Image 11" style="width: 100%; height: 90vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724185041/pp2gmahemghn9eysj9vw.jpg" alt="Birthday Image 1" style="width: 100%; height: 60vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724184878/htkgm2rei1plxriyoucv.jpg" alt="Birthday Image 2" style="width: 100%; height: 60vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1722457530/xd23hsujfysmpmgkqadz.jpg" alt="Birthday Image 3" style="width: 100%; height: 60vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724183413/iooav6y1ctuoiytwaszj.jpg" alt="Birthday Image 4" style="width: 100%; height: 60vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724183927/rvvbx9jne6xqkzjklckj.jpg" alt="Birthday Image 5" style="width: 100%; height: 60vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724190531/nscznqenv9z0sxieydys.jpg" alt="Birthday Image 6" style="width: 100%; height: 60vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724190678/ddt0pnqctkxbaixcjzkd.jpg" alt="Birthday Image 7" style="width: 100%; height: 60vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724190730/x8yb1ewbhoffsiecqibn.jpg" alt="Birthday Image 8" style="width: 100%; height: 60vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724190848/hl4q9kqatpu6ywjewxp4.jpg" alt="Birthday Image 9" style="width: 100%; height: 60vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724191070/osaiagjdzizpefschmav.jpg" alt="Birthday Image 10" style="width: 100%; height: 60vh; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724191126/q2qhi0qljeuw6erdqkjf.jpg" alt="Birthday Image 11" style="width: 100%; height: 60vh; display: none;" />
                             <!-- Add more images as needed -->
                         </div>
                     </div>
