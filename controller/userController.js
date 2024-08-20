@@ -1,103 +1,109 @@
-const UserModel = require('../model/userModel');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
-require('dotenv').config();
+const UserModel = require("../model/userModel");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+require("dotenv").config();
 const sendEmail = require("../util/email");
-const { generateWelcomeEmail } = require('../util/emailtemplates');
+const { generateWelcomeEmail } = require("../util/emailtemplates");
+const { response } = require("express");
 
 exports.signUpUser = async (req, res) => {
-    try {
-        const { fullName, email, password } = req.body;
-      
-        // const existingEmail = await UserModel.findOne({ email: email.toLowerCase() });
-        // if (existingEmail) {
-        //     return res.status(400).json({ message: 'User with this email already exists' });
-        // }
+  try {
+    const { fullName, email, password } = req.body;
 
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);      
+    // const existingEmail = await UserModel.findOne({ email: email.toLowerCase() });
+    // if (existingEmail) {
+    //     return res.status(400).json({ message: 'User with this email already exists' });
+    // }
 
-        // Create user
-        const user = new UserModel({
-            fullName,
-            email: email.toLowerCase(),
-            password: hashedPassword,
-            isVerified: false // User is not verified initially
-        });
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-        const createdUser = await user.save();
+    // Create user
+    const user = new UserModel({
+      fullName,
+      email: email.toLowerCase(),
+      password: hashedPassword,
+      isVerified: false, // User is not verified initially
+    });
 
-        // Generate verification token
-        const token = jwt.sign({ email: createdUser.email, userId: createdUser._id }, process.env.secret_key, { expiresIn: "3days" });
+    const createdUser = await user.save();
 
-        // Send verification email 
-        const verifyLink = `https://birthday1-ppfl.onrender.com/verifyUser/${token}`;
-        const emailSubject = 'BIRTHDAY Mail';
-        const html = generateWelcomeEmail(verifyLink,createdUser.fullName);
+    // Generate verification token
+    const token = jwt.sign(
+      { email: createdUser.email, userId: createdUser._id },
+      process.env.secret_key,
+      { expiresIn: "3days" }
+    );
 
-        const mailOptions = {
-            from: process.env.user,
-            to: email,
-            subject: emailSubject,
-            html: html
-        };
+    // Send verification email
+    const verifyLink = `https://birthday1-ppfl.onrender.com/verifyUser/${token}`;
+    const emailSubject = "BIRTHDAY Mail";
+    const html = generateWelcomeEmail(verifyLink, createdUser.fullName);
 
-        await sendEmail(mailOptions);
+    const mailOptions = {
+      from: process.env.user,
+      to: email,
+      subject: emailSubject,
+      html: html,
+    };
 
-        return res.status(200).json({ message: "Successful, please check your email to verify your account", token, user });
-    } catch (error) {
-         res.status(500).json(error.message); 
-    }
+    await sendEmail(mailOptions);
+
+    return res.status(200).json({
+      message: "Successful, please check your email to verify your account",
+      token,
+      user,
+    });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
 };
-
-
-
-
-
 
 exports.resendVerification = async (req, res) => {
-    try {
-        const { email } = req.body;
-      
-        // Find the user by email
-        const user = await UserModel.findOne({ email: email.toLowerCase() });
+  try {
+    const { email } = req.body;
 
-        if (!user) {
-            return res.status(404).json({ message: 'User not found' });
-        }
+    // Find the user by email
+    const user = await UserModel.findOne({ email: email.toLowerCase() });
 
-        // Check if the user is already verified
-        if (user.isVerified) {
-            return res.status(400).json({ message: 'User already verified' });
-        }
-
-        // Generate a new verification token
-        const token = jwt.sign({ email: user.email, userId: user._id }, process.env.secret_key, { expiresIn: "3d" });
-
-        // Send verification email
-        const verificationLink = `https://birthday1-ppfl.onrender.com/verifyUser/${token}`;
-        const emailSubject = 'Verification Mail';
-        const html = generateWelcomeEmail(user.fullName, verificationLink); 
-
-        const mailOptions = {
-            from: process.env.user,
-            to: email,
-            subject: emailSubject,
-            html: html
-        };
-
-        await sendEmail(mailOptions);
-
-        return res.status(200).json({ message: "Verification email resent. Please check your email." });
-    } catch (error) {
-         res.status(500).json({ message: error.message }); 
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+
+    // Check if the user is already verified
+    if (user.isVerified) {
+      return res.status(400).json({ message: "User already verified" });
+    }
+
+    // Generate a new verification token
+    const token = jwt.sign(
+      { email: user.email, userId: user._id },
+      process.env.secret_key,
+      { expiresIn: "3d" }
+    );
+
+    // Send verification email
+    const verificationLink = `https://birthday1-ppfl.onrender.com/verifyUser/${token}`;
+    const emailSubject = "Verification Mail";
+    const html = generateWelcomeEmail(user.fullName, verificationLink);
+
+    const mailOptions = {
+      from: process.env.user,
+      to: email,
+      subject: emailSubject,
+      html: html,
+    };
+
+    await sendEmail(mailOptions);
+
+    return res
+      .status(200)
+      .json({ message: "Verification email resent. Please check your email." });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 };
-
-
-
-
 
 // exports.verifyUser = async (req, res) => {
 //     try {
@@ -148,9 +154,9 @@ exports.resendVerification = async (req, res) => {
 //create an end point to verify users email
 
 exports.verifyUser = async (req, res) => {
-    try {
-        // Respond with a beautiful birthday message and image slideshow
-        res.status(200).send(`
+  try {
+    // Respond with a beautiful birthday message and image slideshow
+    res.status(200).send(`
             <html>
                 <body style="font-family: Arial, sans-serif; background-color: #f7f7f7; text-align: center; color: #333;">
                     <div style="background-color: #ffcc99; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
@@ -163,7 +169,12 @@ exports.verifyUser = async (req, res) => {
                         <p style="font-size: 18px; line-height: 1.6;">You deserve all the happiness in the world!</p>
                         <p style="font-size: 16px; color: #666;">You will see some lovely images shortl...</p>
                         <div id="images" style="text-align: center; margin-top: 20px;">
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724185041/pp2gmahemghn9eysj9vw.jpg" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724184878/htkgm2rei1plxriyoucv.jpg" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
                             <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1722457530/xd23hsujfysmpmgkqadz.jpg" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724183413/iooav6y1ctuoiytwaszj.jpg" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
+                            <img src="https://res.cloudinary.com/dzjlqmjht/image/upload/v1724183927/rvvbx9jne6xqkzjklckj.jpg" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
+                            <img src="https://web.facebook.com/100090452029135/videos/1666212570472219" alt="Birthday Image 1" style="width: 300px; height: auto; display: none;" />
                             <img src="ella.jpg" alt="Birthday Image 2" style="width: 300px; height: auto; display: none;" />
                             <!-- Add more images as needed -->
                         </div>
@@ -194,105 +205,149 @@ exports.verifyUser = async (req, res) => {
                 </body>
             </html>
         `);
-
-    } catch (error) {
-        console.error('Error during email verification:', error);
-        res.status(500).json({ message: error.message });
-    }
+  } catch (error) {
+    console.error("Error during email verification:", error);
+    res.status(500).json({ message: error.message });
+  }
 };
-
-
 
 // login function
 
+exports.login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-exports.login = async (req, res)=>{
-    try {
-        const {email, password}= req.body
-     
-        if (!email  || !password) {
-            return res.status(400).json({ message: "your email and password are required" });
-          }
-          const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailPattern.test(email)) {
-            return res.status(400).json({ message: "Invalid email format" });
-          }
-        const findUser = await UserModel.findOne({email:email.toLowerCase()})
-        if(!findUser){
-            return res.status(404).json({message:'user with this email does not exist'})
-        }
-        const matchedPassword = await bcrypt.compare(password, findUser.password)
-       if(!matchedPassword){
-            return res.status(400).json({message:'invalid password'})
-        }
-        if(findUser.isVerified === false){
-           return  res.status(400).json({message:'user with this email is not verified'})
-        }
-        findUser.isLoggedIn = true
-        await findUser.save()
-        const token = jwt.sign({ 
-            name:findUser.fullName,
-            email: findUser.email,
-            isAdmim:findUser.isAdmin,
-            userId: findUser._id }, 
-            process.env.secret_key,
-            { expiresIn: "1d" }); 
-
-            return  res.status(200).json({message:'login successfully ',token,findUser}) 
-
-        
-    } catch (error) {
-        
-         res.status(500).json(error.message);
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "your email and password are required" });
     }
-}
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      return res.status(400).json({ message: "Invalid email format" });
+    }
+    const findUser = await UserModel.findOne({ email: email.toLowerCase() });
+    if (!findUser) {
+      return res
+        .status(404)
+        .json({ message: "user with this email does not exist" });
+    }
+    const matchedPassword = await bcrypt.compare(password, findUser.password);
+    if (!matchedPassword) {
+      return res.status(400).json({ message: "invalid password" });
+    }
+    if (findUser.isVerified === false) {
+      return res
+        .status(400)
+        .json({ message: "user with this email is not verified" });
+    }
+    findUser.isLoggedIn = true;
+    await findUser.save();
+    const token = jwt.sign(
+      {
+        name: findUser.fullName,
+        email: findUser.email,
+        isAdmim: findUser.isAdmin,
+        userId: findUser._id,
+      },
+      process.env.secret_key,
+      { expiresIn: "1d" }
+    );
+
+    return res
+      .status(200)
+      .json({ message: "login successfully ", token, findUser });
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
 // find one user
-exports.getOneUser=async(req,res)=>{
-    try {
-
-        const findUser=await UserModel.findById(req.params.id).populate('todoInfo')
-        const total_content=findUser.todoInfo.length
-        if(!findUser){
-            return  res.status(404).json({message:'user not found '})
-        }else{
-            return  res.status(200).json({message:`${findUser.fullName} found `,"Total content created  " :total_content ,data:findUser})
-        }
-        
-    } catch (error) {
-        res.status(500).json(error.message);
+exports.getOneUser = async (req, res) => {
+  try {
+    const findUser = await UserModel.findOne(req.params.id).populate(
+      "todoInfo"
+    );
+    const total_content = findUser.todoInfo.length;
+    if (!findUser) {
+      return res.status(404).json({ message: "user not found " });
+    } else {
+      return res.status(200).json({
+        message: `${findUser.fullName} found `,
+        "Total content created  ": total_content,
+        data: findUser,
+      });
     }
-}
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
 
 // find all user
 
-
-exports.getAllUsers=async(req,res)=>{
-    try {
-        const findUser=await UserModel.find()
-        if(findUser===0 || findUser<1){
-            return  res.status(404).json({message:'user not found '})
-        }else{
-            return  res.status(200).json({message:'users found ',"total users":findUser.length ,data:findUser})
-        }
-        
-    } catch (error) {
-         res.status(500).json(error.message);
+exports.getAllUsers = async (req, res) => {
+  try {
+    const findUser = await UserModel.find();
+    if (findUser === 0 || findUser < 1) {
+      return res.status(404).json({ message: "user not found " });
+    } else {
+      return res.status(200).json({
+        message: "users found ",
+        "total users": findUser.length,
+        data: findUser,
+      });
     }
-}
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
 
 // delete user
 
-
-exports.deleteUser=async(req,res)=>{
-    try {
-        const findUser=await UserModel.findByIdAndDelete(req.params.id)
-        if(!findUser){
-            return  res.status(404).json({message:'user not found '})
-        }else{
-            return  res.status(200).json({message:'user successfully deleted'})
-        }
-        
-    } catch (error) {
-        res.status(500).json(error.message);
+exports.deleteUser = async (req, res) => {
+  try {
+    const findUser = await UserModel.findByIdAndDelete(req.params.id);
+    if (!findUser) {
+      return res.status(404).json({ message: "user not found " });
+    } else {
+      return res.status(200).json({ message: "user successfully deleted" });
     }
-}
+  } catch (error) {
+    res.status(500).json(error.message);
+  }
+};
+
+// update user
+exports.updateUser = async (req, res) => {
+  try {
+    const { fullName, classes, age } = req.body;
+
+    if (!fullName && !classes && !age) {
+      return res.status(400).json({
+        message: "At least one field (fullName, classes, age) is required",
+      });
+    }
+
+    // Construct the data object dynamically
+    const data = {};
+    if (fullName) data.fullName = fullName;
+    if (classes) data.classes = classes;
+    if (age) data.age = age;
+
+    const updateAUser = await UserModel.findByIdAndUpdate(req.params.id, data, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updateAUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({
+      message: "User information successfully updated",
+      updatedFields: data,
+      updatedUser: updateAUser,
+    });
+  } catch (error) {
+    return res.status(400).json({ message: error.message });
+  }
+};
